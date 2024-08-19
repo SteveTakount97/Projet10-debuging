@@ -1,30 +1,34 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useData } from "../../contexts/DataContext";
 import { getMonth } from "../../helpers/Date";
-
 import "./style.scss";
 
 const Slider = () => {
   const { data } = useData();
   const [index, setIndex] = useState(0);
-  const byDateDesc = data?.focus.sort((evtA, evtB) =>
-    new Date(evtA.date) > new Date(evtB.date) ? -1 : 1 
-  );
+
+  // Initialise byDateDesc de manière sécurisée
+  const byDateDesc = data?.focus?.length
+    ? data.focus.sort((evtA, evtB) =>
+      new Date(evtA.date) - new Date(evtB.date) // Tri croissant
+      )
+    : [];
+    
+  // Ne met à jour l'index que si byDateDesc n'est pas vide
   const nextCard = () => {
-    setTimeout(() => {
-      setIndex((prevIndex) => (prevIndex + 1) % byDateDesc.length); 
-    }, 5000);
+      setIndex((prevIndex) => (prevIndex + 1) % byDateDesc.length);
   };
+
   useEffect(() => {
-    nextCard();
-  }, [index]); // Ajoute index comme dépendance
+      const intervalId = setInterval(nextCard, 5000);
+      return () => clearInterval(intervalId);
+  }, [index]);
 
   return (
     <div className="SlideCardList">
-      {byDateDesc?.map((event, idx) => (
-        <>
+      {byDateDesc.map((event, idx) => (
+        <React.Fragment key={event.title}>
           <div
-            key={event.title}
             className={`SlideCard SlideCard--${
               index === idx ? "display" : "hide"
             }`}
@@ -42,15 +46,16 @@ const Slider = () => {
             <div className="SlideCard__pagination">
               {byDateDesc.map((_, radioIdx) => (
                 <input
-                  key={`${event.id}`}
+                  key={event.id}
                   type="radio"
                   name="radio-button"
-                  checked={idx === radioIdx}
+                  checked={index === radioIdx}
+                  onChange={() => setIndex(radioIdx)} // Modification de l'index lorsqu'un bouton radio est sélectionné
                 />
               ))}
             </div>
           </div>
-        </>
+        </React.Fragment>
       ))}
     </div>
   );
