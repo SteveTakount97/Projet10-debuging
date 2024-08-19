@@ -12,5 +12,7 @@ export const MONTHS = {
   11: "novembre",
   12: "décembre",
 };
-
-export const getMonth = (date) => MONTHS[date.getMonth()];
+export const getMonth = (date) => {
+  const monthIndex = date.getMonth() + 1; // Ajouter 1 pour correspondre aux clés du dictionnaire MONTHS
+  return MONTHS[monthIndex] || "Mois invalide"; // Valeur de repli en cas de problème
+};
