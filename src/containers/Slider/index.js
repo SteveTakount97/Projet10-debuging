@@ -14,10 +14,11 @@ const Slider = () => {
       )
     : [];
     
-  // Ne met à jour l'index que si byDateDesc n'est pas vide
-  const nextCard = () => {
-      setIndex((prevIndex) => (prevIndex + 1) % byDateDesc.length);
-  };
+    const nextCard = () => {
+      if (byDateDesc.length > 0) {
+        setIndex((prevIndex) => (prevIndex + 1) % byDateDesc.length);
+      }
+    };
 
   useEffect(() => {
       const intervalId = setInterval(nextCard, 5000);
