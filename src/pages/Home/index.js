@@ -1,8 +1,8 @@
+import React, { useMemo } from 'react';
 import Menu from "../../containers/Menu";
 import ServiceCard from "../../components/ServiceCard";
 import EventCard from "../../components/EventCard";
 import PeopleCard from "../../components/PeopleCard";
-
 import "./style.scss";
 import EventList from "../../containers/Events";
 import Slider from "../../containers/Slider";
@@ -13,7 +13,15 @@ import Modal from "../../containers/Modal";
 import { useData } from "../../contexts/DataContext";
 
 const Page = () => {
-  const {last} = useData()
+  const { data } = useData();
+   // Calculer la dernière prestation directement dans le composant Page
+   const lastEvent = useMemo(() => {
+    if (data && data.events) {
+      // Tri des événements par date pour obtenir le plus récent
+      return [...data.events].sort((a, b) => new Date(b.date) - new Date(a.date))[0];
+    }
+    return null;
+  }, [data]);
   return <>
     <header>
       <Menu />
@@ -116,13 +124,17 @@ const Page = () => {
     <footer className="row">
       <div className="col presta">
         <h3>Notre derniére prestation</h3>
-        <EventCard
-          imageSrc={last?.cover}
-          title={last?.title}
-          date={new Date(last?.date)}
-          small
-          label="boom"
-        />
+        {lastEvent ? (
+            <EventCard
+              imageSrc={lastEvent.cover}
+              title={lastEvent.title}
+              date={new Date(lastEvent.date)}
+              small
+              label="boom"
+            />
+          ) : (
+            <p>Aucune prestation disponible pour le moment.</p>
+          )}
       </div>
       <div className="col contact">
         <h3>Contactez-nous</h3>
