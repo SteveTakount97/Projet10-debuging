@@ -12,18 +12,19 @@ const Slider = () => {
     ? data.focus.sort((evtA, evtB) =>
       new Date(evtA.date) - new Date(evtB.date) // Tri croissant
       )
-    : [];
+    :[];
     
     const nextCard = () => {
-     
         setIndex((prevIndex) => (prevIndex + 1) % byDateDesc.length);
-      
     };
 
   useEffect(() => {
-      const intervalId = setInterval(nextCard, 5000);
-      return () => clearInterval(intervalId);
-  }, [index]);
+      if (byDateDesc.length > 0) {
+        const intervalId = setInterval(nextCard, 5000);
+        return () => clearInterval(intervalId);
+      }
+      return undefined;
+   }, [byDateDesc.length]);
 
   return (
     <div className="SlideCardList">
