@@ -36,7 +36,6 @@ const EventList = () => {
   
       (currentPage - 1) * PER_PAGE <= index &&
       PER_PAGE * currentPage > index
-    
   );
   
   const changeType = (evtType) => {
