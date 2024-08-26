@@ -10,7 +10,7 @@ const Slider = () => {
   // Initialise byDateDesc de manière sécurisée
   const byDateDesc = data?.focus?.length
     ? data.focus.sort((evtA, evtB) =>
-      new Date(evtA.date) - new Date(evtB.date) // Tri croissant
+      new Date(evtA.date) > new Date(evtB.date) ? -1 : 1 // Tri decroissant
       )
     :[];
     
@@ -48,7 +48,7 @@ const Slider = () => {
             <div className="SlideCard__pagination">
               {byDateDesc.map((_, radioIdx) => (
                 <input
-                  key={event.id}
+                  key={radioIdx.id}
                   type="radio"
                   name="radio-button"
                   checked={index === radioIdx}

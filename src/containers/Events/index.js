@@ -17,19 +17,27 @@ const EventList = () => {
   // Vérifiez les données et le type de filtrage
   console.log('Données des événements:', data?.events);
   console.log('Type sélectionné:', type);
-  
-  // mise en place de la logique de filtrage
+
+  // Filtrer les événements en fonction du type sélectionné
   const filteredEvents = (
-    (type ? data?.events.filter(event => event.type === type) : data?.events) || []
-  ).filter((event, index) => {
-    if (
+    type
+      ? data?.events.filter(event => event.type === type)
+      : data?.events
+  ) || [];
+
+  // Trier les événements par date en ordre décroissant
+  const sortedEvents = filteredEvents.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+  console.log('Type sélectionné:', type);
+  console.log('Événements triés avant pagination:', sortedEvents);
+
+  // Pagination des événements triés
+  const paginatedEvents = sortedEvents.filter((event, index) => 
+  
       (currentPage - 1) * PER_PAGE <= index &&
       PER_PAGE * currentPage > index
-    ) {
-      return true;
-    }
-    return false;
-  });
+    
+  );
   
   const changeType = (evtType) => {
     setCurrentPage(1);
@@ -50,7 +58,7 @@ const EventList = () => {
             onChange={(value) => (value ? changeType(value) : changeType(null))}
           />
           <div id="events" className="ListContainer">
-            {filteredEvents.map((event) => (
+            {paginatedEvents.map((event) => (
               <Modal key={event.id} Content={<ModalEvent event={event} />}>
                 {({ setIsOpened }) => (
                   <EventCard
